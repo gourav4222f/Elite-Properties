@@ -19,9 +19,9 @@ const bodyFont = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Elite Properties | Design System Preview",
+  title: "Elite Properties | Find Your Place in Vrindavan",
   description:
-    "Internal design-system and motion foundation for Elite Properties in Vrindavan.",
+    "Premium residential, commercial, land, rental, and property investment guidance in Vrindavan and Mathura.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
