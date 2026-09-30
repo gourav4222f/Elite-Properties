@@ -1,0 +1,22 @@
+[
+  {
+    "id": "demo-residence-01",
+    "slug": "demo-residence-vrindavan",
+    "title": "Demo Residence",
+    "type": "apartment",
+    "purpose": "sale",
+    "location": "Vrindavan, Mathura",
+    "price": null,
+    "priceLabel": "Price on request",
+    "area": "To be confirmed",
+    "bedrooms": null,
+    "bathrooms": null,
+    "featured": true,
+    "images": [
+      "/images/properties/aerial-view-luxury-residential-building-greenery.jpg"
+    ],
+    "description": "Placeholder record for validating the local JSON data architecture.",
+    "amenities": [],
+    "status": "upcoming"
+  }
+]

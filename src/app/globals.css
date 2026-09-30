@@ -1,0 +1,192 @@
+@import "tailwindcss";
+
+:root {
+  --elite-ink: #1b0e07;
+  --elite-ivory: #faf8f3;
+  --elite-sand: #d4b79b;
+  --elite-sand-dark: #9c815a;
+  --elite-forest: #2f270e;
+  --elite-olive: #4d411f;
+  --elite-olive-light: #4d4d1c;
+  --elite-terracotta: #c25631;
+  --elite-ochre: #aa6700;
+
+  --background: var(--elite-ivory);
+  --surface: #f1ede4;
+  --foreground: var(--elite-ink);
+  --muted: #6d6259;
+  --border: #d9d0c5;
+  --accent: var(--elite-olive);
+  --accent-foreground: var(--elite-ivory);
+  --dark-surface: var(--elite-forest);
+  --dark-foreground: var(--elite-ivory);
+
+  --page-gutter: clamp(1.25rem, 4.25vw, 6rem);
+  --section-space: clamp(5rem, 11vw, 10rem);
+  --content-max: 100rem;
+  --content-narrow: 52rem;
+  --radius-subtle: 0.25rem;
+  --radius-control: 0.25rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-dark-surface: var(--dark-surface);
+  --color-dark-foreground: var(--dark-foreground);
+  --color-elite-ink: var(--elite-ink);
+  --color-elite-ivory: var(--elite-ivory);
+  --color-elite-sand: var(--elite-sand);
+  --color-elite-sand-dark: var(--elite-sand-dark);
+  --color-elite-forest: var(--elite-forest);
+  --color-elite-olive: var(--elite-olive);
+  --color-elite-olive-light: var(--elite-olive-light);
+  --color-elite-terracotta: var(--elite-terracotta);
+  --color-elite-ochre: var(--elite-ochre);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-body);
+  --font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
+  color: var(--foreground);
+  scroll-behavior: auto;
+}
+
+body {
+  min-height: 100dvh;
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--elite-sand);
+  color: var(--elite-ink);
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 50;
+  transform: translateY(-200%);
+  border-radius: var(--radius-control);
+  background: var(--foreground);
+  color: var(--background);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.4vw, 1.5rem);
+}
+
+.text-display-xl {
+  font-size: clamp(4rem, 12vw, 12rem);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.82;
+}
+
+.text-display-lg {
+  font-size: clamp(3.25rem, 8vw, 8.5rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.88;
+}
+
+.text-heading-xl {
+  font-size: clamp(2.75rem, 6vw, 6rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+}
+
+.text-heading-lg {
+  font-size: clamp(2.25rem, 4vw, 4.25rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+}
+
+.text-heading-md {
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.text-body-lg {
+  font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+  line-height: 1.65;
+}
+
+.text-body {
+  font-size: clamp(0.95rem, 1vw, 1.075rem);
+  line-height: 1.7;
+}
+
+.text-body-sm {
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.text-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.text-caption {
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 48rem) {
+  .editorial-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .editorial-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
