@@ -396,11 +396,6 @@ export function PropertyIntent() {
         </form>
       </section>
 
-      <div className="selected-properties-placeholder" aria-labelledby="selected-properties-title" data-reveal-group>
-        <p data-intent-reveal>02 / Selected properties</p>
-        <h2 id="selected-properties-title"><LineHeadline lines={["A few places", "worth your attention."]} /></h2>
-      </div>
-
       <div ref={cursorRef} className="view-cursor" aria-hidden="true">View <ArrowUpRight size={12} strokeWidth={1.5} /></div>
     </section>
   );
