@@ -1,6 +1,4 @@
 import { HeroSequence } from "@/components/hero/hero-sequence";
-import { Footer } from "@/components/layout/footer";
-import { Header } from "@/components/layout/header";
 import { About } from "@/components/sections/about/about";
 import { Contact } from "@/components/sections/contact/contact";
 import { PropertyIntent } from "@/components/sections/property-intent/property-intent";
@@ -11,19 +9,15 @@ import { WhyVrindavan } from "@/components/sections/why-vrindavan/why-vrindavan"
 
 export default function HomePage() {
   return (
-    <>
-      <main id="main-content">
-        <Header />
-        <HeroSequence />
-        <PropertyIntent />
-        <WhyVrindavan />
-        <About />
-        <PropertyJourney />
-        <SelectedSpaces />
-        <SelectedProperties />
-        <Contact />
-      </main>
-      <Footer />
-    </>
+    <main id="main-content">
+      <HeroSequence />
+      <PropertyIntent />
+      <WhyVrindavan />
+      <About />
+      <PropertyJourney />
+      <SelectedSpaces />
+      <SelectedProperties />
+      <Contact />
+    </main>
   );
 }

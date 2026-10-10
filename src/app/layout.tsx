@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
+import "@/styles/pages.css";
 
+import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/layout/header";
+import { PageTransition } from "@/components/layout/page-transition";
 import { SmoothScrollProvider } from "@/components/motion/smooth-scroll-provider";
 
 const displayFont = Cormorant_Garamond({
@@ -19,7 +23,10 @@ const bodyFont = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Elite Properties | Find Your Place in Vrindavan",
+  title: {
+    default: "Elite Properties | Find Your Place in Vrindavan",
+    template: "%s | Elite Properties",
+  },
   description:
     "Premium residential, commercial, land, rental, and property investment guidance in Vrindavan and Mathura.",
 };
@@ -31,7 +38,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>
-        <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        <SmoothScrollProvider>
+          <PageTransition>
+            <Header />
+            {children}
+            <Footer />
+          </PageTransition>
+        </SmoothScrollProvider>
       </body>
     </html>
   );

@@ -9,8 +9,19 @@ import { animateImages } from "@/lib/image-motion";
  * - `[data-reveal]`: copy fades up, batched so neighbours stagger naturally
  * - `[data-image]`: image frames reveal and drift (see `animateImages`)
  */
+/**
+ * Elements under `root`, minus any inside a nested `[data-motion-owner]`: components that
+ * animate themselves are left to do so, so nothing is animated twice.
+ */
+export function ownedBy<T extends Element = HTMLElement>(root: HTMLElement, selector: string) {
+  return Array.from(root.querySelectorAll<T>(selector)).filter((element) => {
+    const owner = element.closest("[data-motion-owner]");
+    return !owner || owner === root || owner.contains(root);
+  });
+}
+
 export function revealOnScroll(root: HTMLElement) {
-  root.querySelectorAll<HTMLElement>("[data-reveal-lines]").forEach((heading) => {
+  ownedBy(root, "[data-reveal-lines]").forEach((heading) => {
     gsap.fromTo(
       heading.querySelectorAll(".line-mask > span"),
       { yPercent: 112 },
@@ -24,7 +35,7 @@ export function revealOnScroll(root: HTMLElement) {
     );
   });
 
-  const copy = gsap.utils.toArray<HTMLElement>(root.querySelectorAll("[data-reveal]"));
+  const copy = ownedBy(root, "[data-reveal]");
   if (copy.length) {
     gsap.set(copy, { y: 24, autoAlpha: 0 });
     ScrollTrigger.batch(copy, {

@@ -12,10 +12,39 @@
     "bedrooms": 3,
     "bathrooms": 3,
     "featured": true,
-    "images": ["/images/properties/aerial-apartment-building-dusk-city-lights.jpg"],
+    "images": [
+      "/images/properties/aerial-apartment-building-dusk-city-lights.jpg"
+    ],
     "description": "Low-rise apartments with planted terraces, framed by greenery and open evening views.",
-    "amenities": ["Planted terraces", "Clubhouse", "Covered parking"],
-    "status": "available"
+    "amenities": [
+      "Planted terraces",
+      "Clubhouse",
+      "Covered parking"
+    ],
+    "status": "available",
+    "neighbourhood": "chhatikara-road",
+    "overview": [
+      "Garden Terrace Residences is a low-rise address on the approach into Vrindavan, designed around planted terraces that soften every floor and frame the view.",
+      "Three- and four-bedroom homes are arranged so that living spaces open to the outside, with generous windows, cross-ventilation and quiet bedrooms set back from the road."
+    ],
+    "gallery": [
+      {
+        "src": "/images/interiors/open-kitchen-dining-area-apartment.webp",
+        "alt": "Open kitchen and dining area with warm timber finishes"
+      },
+      {
+        "src": "/images/interiors/master-bedroom-wardrobe-balcony-view.webp",
+        "alt": "Bedroom with fitted wardrobes opening onto a balcony"
+      },
+      {
+        "src": "/images/interiors/bathroom-glass-shower-luxury.webp",
+        "alt": "Bathroom with a frameless glass shower"
+      },
+      {
+        "src": "/images/lifestyle/rooftop-garden-terrace-aerial.webp",
+        "alt": "Planted rooftop terrace seen from above"
+      }
+    ]
   },
   {
     "id": "poolside-villa",
@@ -30,10 +59,39 @@
     "bedrooms": 5,
     "bathrooms": 5,
     "featured": true,
-    "images": ["/images/properties/luxury-building-night-view-water-reflection.jpg"],
+    "images": [
+      "/images/properties/luxury-building-night-view-water-reflection.jpg"
+    ],
     "description": "A five-bedroom home arranged around a reflecting pool, with terraces on every level.",
-    "amenities": ["Private pool", "Roof terrace", "Home lift"],
-    "status": "upcoming"
+    "amenities": [
+      "Private pool",
+      "Roof terrace",
+      "Home lift"
+    ],
+    "status": "upcoming",
+    "neighbourhood": "central-vrindavan",
+    "overview": [
+      "A five-bedroom residence composed around a still reflecting pool, so that water and light are part of every room on the lower floor.",
+      "Terraces step back on each level, giving bedrooms private outdoor space and the roof a place for evenings and gatherings."
+    ],
+    "gallery": [
+      {
+        "src": "/images/interiors/luxury-living-room-chandelier-curtains.jpg",
+        "alt": "Living room with a chandelier and floor-length curtains"
+      },
+      {
+        "src": "/images/interiors/bedroom-chandelier-luxury-interior.webp",
+        "alt": "Bedroom with pendant lighting and panelled walls"
+      },
+      {
+        "src": "/images/interiors/dining-nook-wooden-panel-apartment.webp",
+        "alt": "Dining nook with wooden panelling and shelving"
+      },
+      {
+        "src": "/images/interiors/entrance-foyer-wardrobe-unit.webp",
+        "alt": "Entrance foyer with a built-in wardrobe"
+      }
+    ]
   },
   {
     "id": "corner-office-building",
@@ -48,10 +106,39 @@
     "bedrooms": null,
     "bathrooms": null,
     "featured": true,
-    "images": ["/images/commercial/commercial-building-tree-pattern-facade.webp"],
+    "images": [
+      "/images/commercial/commercial-building-tree-pattern-facade.webp"
+    ],
     "description": "A sculpted-facade building suited to offices, clinics or a flagship showroom.",
-    "amenities": ["Road frontage", "Basement parking", "Power back-up"],
-    "status": "available"
+    "amenities": [
+      "Road frontage",
+      "Basement parking",
+      "Power back-up"
+    ],
+    "status": "available",
+    "neighbourhood": "mathura-vrindavan-road",
+    "overview": [
+      "A corner building with a sculpted facade that gives a business instant presence on the Mathura–Vrindavan Road.",
+      "Flexible floor plates suit offices, clinics or a flagship showroom, with basement parking and reliable back-up power."
+    ],
+    "gallery": [
+      {
+        "src": "/images/commercial/commercial-lobby-marble-floor-glass-wall.webp",
+        "alt": "Sunlit lobby with marble floors and tall glass walls"
+      },
+      {
+        "src": "/images/commercial/office-meeting-room-glass-windows.webp",
+        "alt": "Meeting room beside tall glass windows"
+      },
+      {
+        "src": "/images/commercial/reception-lobby-marble-desk.webp",
+        "alt": "Reception lobby with a marble desk"
+      },
+      {
+        "src": "/images/infrastructure/underground-parking-luxury-car.webp",
+        "alt": "Basement parking with a car arriving"
+      }
+    ]
   },
   {
     "id": "furnished-city-apartment",
@@ -66,10 +153,39 @@
     "bedrooms": 2,
     "bathrooms": 2,
     "featured": true,
-    "images": ["/images/interiors/living-room-balcony-city-view.webp"],
+    "images": [
+      "/images/interiors/living-room-balcony-city-view.webp"
+    ],
     "description": "A move-in-ready two-bedroom apartment with a balcony living room and city outlook.",
-    "amenities": ["Fully furnished", "Balcony", "Lift"],
-    "status": "available"
+    "amenities": [
+      "Fully furnished",
+      "Balcony",
+      "Lift"
+    ],
+    "status": "available",
+    "neighbourhood": "mathura",
+    "overview": [
+      "A move-in-ready two-bedroom apartment in Mathura, furnished in calm, neutral tones with a balcony living room.",
+      "Suited to professionals and families who want to settle in quickly, with the city's rail and market connections close by."
+    ],
+    "gallery": [
+      {
+        "src": "/images/interiors/modern-kitchen-corner-built-in-oven.webp",
+        "alt": "Modern kitchen corner with a built-in oven"
+      },
+      {
+        "src": "/images/interiors/master-bedroom-wooden-panel-design.webp",
+        "alt": "Bedroom with warm wooden wall panels"
+      },
+      {
+        "src": "/images/interiors/kitchen-dining-table-pendant-lights.webp",
+        "alt": "Dining table beneath pendant lights"
+      },
+      {
+        "src": "/images/interiors/bathroom-wall-hung-toilet-vanity.webp",
+        "alt": "Bathroom with a wall-hung vanity"
+      }
+    ]
   },
   {
     "id": "gated-residential-plots",
@@ -84,10 +200,35 @@
     "bedrooms": null,
     "bathrooms": null,
     "featured": true,
-    "images": ["/images/properties/gated-community-entrance-sunset.png"],
+    "images": [
+      "/images/properties/gated-community-entrance-sunset.png"
+    ],
     "description": "Plots in a landscaped, gated enclave with wide internal roads and a staffed entrance.",
-    "amenities": ["Gated entry", "Landscaped avenues", "Underground utilities"],
-    "status": "available"
+    "amenities": [
+      "Gated entry",
+      "Landscaped avenues",
+      "Underground utilities"
+    ],
+    "status": "available",
+    "neighbourhood": "mathura-vrindavan-road",
+    "overview": [
+      "Residential plots inside a landscaped, gated enclave, ready for the home you want to build.",
+      "Wide internal roads, planted avenues and a staffed entrance give the community its calm, with underground utilities already in place."
+    ],
+    "gallery": [
+      {
+        "src": "/images/properties/aerial-view-luxury-residential-building-greenery.jpg",
+        "alt": "Aerial view of homes set among dense greenery"
+      },
+      {
+        "src": "/images/lifestyle/family-walking-residential-park.png",
+        "alt": "Family walking along a tree-lined path"
+      },
+      {
+        "src": "/images/properties/residential-complex-night-exterior.jpg",
+        "alt": "Residential community lit up at night"
+      }
+    ]
   },
   {
     "id": "restaurant-floor-for-lease",
@@ -102,9 +243,34 @@
     "bedrooms": null,
     "bathrooms": null,
     "featured": true,
-    "images": ["/images/commercial/restaurant-dining-hall-city-view.webp"],
+    "images": [
+      "/images/commercial/restaurant-dining-hall-city-view.webp"
+    ],
     "description": "A bright, double-height dining floor with city views, fitted for hospitality.",
-    "amenities": ["Fitted kitchen", "City views", "Lift access"],
-    "status": "upcoming"
+    "amenities": [
+      "Fitted kitchen",
+      "City views",
+      "Lift access"
+    ],
+    "status": "upcoming",
+    "neighbourhood": "mathura",
+    "overview": [
+      "A bright, double-height dining floor with city views, already fitted for hospitality.",
+      "Suited to a restaurant, café or banquet concept looking to serve Mathura's residents and its steady flow of visitors."
+    ],
+    "gallery": [
+      {
+        "src": "/images/commercial/commercial-showroom-arched-facade.webp",
+        "alt": "Arched commercial facade along a street"
+      },
+      {
+        "src": "/images/commercial/shopping-mall-high-rise-complex.webp",
+        "alt": "Retail building beside a residential tower"
+      },
+      {
+        "src": "/images/commercial/glass-commercial-office-building.webp",
+        "alt": "Glass-fronted commercial building"
+      }
+    ]
   }
 ]

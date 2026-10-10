@@ -1,6 +1,8 @@
 "use client";
 
+import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 import { MaskedLines } from "@/components/motion/masked-lines";
@@ -152,6 +154,13 @@ export function WhyVrindavan() {
           Vrindavan has always drawn people close. Better roads, new communities and growing commerce are
           making it a place to build a life around, not only to visit.
         </p>
+        <Link className="intent-link place-intro-link" href="/vrindavan" data-reveal>
+          <span className="intent-link-swap">
+            <span>Discover Vrindavan</span>
+            <span aria-hidden="true">Discover Vrindavan</span>
+          </span>
+          <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} />
+        </Link>
       </header>
 
       <div className="place-reasons-wrap">

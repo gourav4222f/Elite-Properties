@@ -14,9 +14,14 @@ function handleHashLinkClick(event: MouseEvent) {
   if (event.defaultPrevented || event.button !== 0) return;
   if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
-  const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[href^="#"]') : null;
-  const hash = link?.getAttribute("href");
-  if (!hash || hash.length < 2) return;
+  const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[href*="#"]') : null;
+  if (!link || link.target === "_blank") return;
+  // "#enquiry" and "/contact#enquiry" are the same in-page journey while on /contact.
+  const url = new URL(link.href, window.location.href);
+  if (url.origin !== window.location.origin || url.pathname !== window.location.pathname) return;
+  if (url.search !== window.location.search) return;
+  const hash = url.hash;
+  if (hash.length < 2) return;
 
   const target = document.getElementById(decodeURIComponent(hash.slice(1)));
   if (!target) return;

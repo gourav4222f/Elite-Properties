@@ -267,11 +267,11 @@ export function PropertyJourney() {
           <h2>One property journey.<br />One local partner.</h2>
           <p>From finding the right opportunity to navigating what comes next.</p>
           <div className="journey-summary-actions">
-            <Link className="journey-primary-cta" href="#contact">
+            <Link className="journey-primary-cta" href="/contact">
               <span className="intent-link-swap"><span>Talk to a property expert</span><span aria-hidden="true">Talk to a property expert</span></span>
               <ArrowUpRight aria-hidden="true" size={17} strokeWidth={1.5} />
             </Link>
-            <Link className="journey-secondary-cta" href="#properties">Explore properties</Link>
+            <Link className="journey-secondary-cta" href="/services">See every service</Link>
           </div>
         </div>
         <ol className="journey-summary-list" aria-label="Property journey summary">

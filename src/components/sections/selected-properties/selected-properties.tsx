@@ -1,92 +1,22 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { MaskedLines } from "@/components/motion/masked-lines";
+import { ListingCard } from "@/components/properties/listing-card";
 import {
   listingFilters,
   listings,
   matchesFilter,
-  propertyStatusLabels,
-  propertyTypeLabels,
   type ListingFilter,
 } from "@/data/listings";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { useViewCursor } from "@/hooks/use-view-cursor";
-import { requestEnquiry } from "@/lib/enquiry";
 import { gsap, motionEasings, ScrollTrigger } from "@/lib/gsap";
 import { animateImage } from "@/lib/image-motion";
 import { revealOnScroll } from "@/lib/reveal";
-import type { Property } from "@/types/property";
-
-function enquireAbout(property: Property) {
-  requestEnquiry({
-    property: property.title,
-    interest: property.purpose === "rent" ? "Renting a property" : "Buying a property",
-  });
-}
-
-function ListingCard({ property, index }: { property: Property; index: number }) {
-  const wide = index % 4 === 0 || index % 4 === 3;
-  const facts = [
-    `${propertyTypeLabels[property.type]} · ${property.purpose === "rent" ? "For rent" : "For sale"}`,
-    property.bedrooms ? `${property.bedrooms} BHK` : null,
-    property.area,
-  ].filter(Boolean);
-
-  return (
-    <li className="listing-card" data-listing-card>
-      <Link
-        className="listing-media"
-        href="#contact"
-        tabIndex={-1}
-        aria-hidden="true"
-        data-cursor-view
-        onClick={() => enquireAbout(property)}
-      >
-        <span className="listing-media-frame" data-listing-frame>
-          <Image
-            src={property.images[0]}
-            alt=""
-            fill
-            sizes={wide ? "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 56vw" : "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 34vw"}
-          />
-        </span>
-        <span className="listing-status" data-status={property.status}>
-          {propertyStatusLabels[property.status]}
-        </span>
-      </Link>
-      <div className="listing-body">
-        <p className="listing-location">{property.location}</p>
-        <h3 className="listing-title">{property.title}</h3>
-        <p className="listing-description">{property.description}</p>
-        <ul className="listing-facts" aria-label="Key facts">
-          {facts.map((fact) => (
-            <li key={fact}>{fact}</li>
-          ))}
-        </ul>
-        <div className="listing-footer">
-          <span className="listing-price">{property.priceLabel}</span>
-          <Link
-            className="intent-link"
-            href="#contact"
-            aria-label={`Enquire about ${property.title}`}
-            onClick={() => enquireAbout(property)}
-          >
-            <span className="intent-link-swap">
-              <span>Enquire</span>
-              <span aria-hidden="true">Enquire</span>
-            </span>
-            <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} />
-          </Link>
-        </div>
-      </div>
-    </li>
-  );
-}
 
 export function SelectedProperties() {
   const rootRef = useRef<HTMLElement>(null);
@@ -211,23 +141,32 @@ export function SelectedProperties() {
 
       <ul ref={gridRef} className="listings-grid">
         {visible.map((property, index) => (
-          <ListingCard key={property.id} property={property} index={index} />
+          <ListingCard key={property.id} property={property} index={index} enquire="inline" />
         ))}
       </ul>
 
       <div className="listings-more" data-reveal>
         <p>Not every opportunity is listed publicly. Tell us what you are looking for.</p>
-        <Link className="intent-link" href="#contact">
-          <span className="intent-link-swap">
-            <span>Share your requirements</span>
-            <span aria-hidden="true">Share your requirements</span>
-          </span>
-          <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} />
-        </Link>
+        <div className="listings-more-links">
+          <Link className="intent-link" href="/properties">
+            <span className="intent-link-swap">
+              <span>View all properties</span>
+              <span aria-hidden="true">View all properties</span>
+            </span>
+            <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} />
+          </Link>
+          <Link className="intent-link" href="#contact">
+            <span className="intent-link-swap">
+              <span>Share your requirements</span>
+              <span aria-hidden="true">Share your requirements</span>
+            </span>
+            <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} />
+          </Link>
+        </div>
       </div>
 
       <div ref={cursorRef} className="view-cursor" aria-hidden="true">
-        Enquire <ArrowUpRight size={12} strokeWidth={1.5} />
+        View <ArrowUpRight size={12} strokeWidth={1.5} />
       </div>
     </section>
   );

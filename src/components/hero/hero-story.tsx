@@ -125,7 +125,7 @@ export function HeroStory() {
           </h2>
           <p className="final-location">Vrindavan · Mathura</p>
           <div className="final-actions">
-            <Link className="hero-primary-cta" href="#properties">
+            <Link className="hero-primary-cta" href="/properties">
               <span className="cta-swap" aria-hidden="true">
                 <span>Explore properties</span>
                 <span>Explore properties</span>
@@ -133,7 +133,7 @@ export function HeroStory() {
               <span className="sr-only">Explore properties</span>
               <ArrowUpRight aria-hidden="true" size={18} strokeWidth={1.5} />
             </Link>
-            <Link className="hero-secondary-action" href="#contact">Talk to a property expert</Link>
+            <Link className="hero-secondary-action" href="/contact">Talk to a property expert</Link>
           </div>
         </div>
         <div className="continue-indicator" aria-hidden="true">

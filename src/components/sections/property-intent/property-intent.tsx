@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 
+import { turnPage } from "@/components/layout/page-transition";
+import { propertySearchHref } from "@/data/listings";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { useViewCursor } from "@/hooks/use-view-cursor";
 import { getScrub, gsap, motionEasings } from "@/lib/gsap";
@@ -171,20 +173,15 @@ export function PropertyIntent() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const query = new URLSearchParams({
-      intent,
-      type: String(form.get("propertyType") ?? ""),
-      location: String(form.get("location") ?? ""),
-      budget: String(form.get("budget") ?? ""),
-    });
-
-    if ([...query.values()].some((value) => !value)) {
-      setStatus("Please complete every field before continuing.");
-      return;
-    }
-
-    window.history.replaceState({}, "", `${window.location.pathname}?${query.toString()}#property-finder`);
-    setStatus("Your property preferences are ready for the listings experience.");
+    setStatus("Finding properties that match…");
+    turnPage(
+      propertySearchHref({
+        intent,
+        type: String(form.get("propertyType") ?? ""),
+        location: String(form.get("location") ?? ""),
+        budget: String(form.get("budget") ?? ""),
+      }),
+    );
   };
 
   const residential = propertyCategories.residential;

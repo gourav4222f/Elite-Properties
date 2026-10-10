@@ -1,4 +1,5 @@
 import { getScrub, gsap, ScrollTrigger } from "@/lib/gsap";
+import { ownedBy } from "@/lib/reveal";
 
 export type RevealDirection = "up" | "left" | "none";
 
@@ -92,8 +93,8 @@ export function animateImage(
 }
 
 /** Applies `animateImage` to every `[data-image]` frame inside `root`. */
-export function animateImages(root: ParentNode) {
-  root.querySelectorAll<HTMLElement>("[data-image]").forEach((frame) => {
+export function animateImages(root: HTMLElement) {
+  ownedBy(root, "[data-image]").forEach((frame) => {
     animateImage(frame, {
       reveal: (frame.dataset.image || "up") as RevealDirection,
       parallax: Number(frame.dataset.parallax) || 0,

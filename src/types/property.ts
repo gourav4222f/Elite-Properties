@@ -24,12 +24,10 @@ export interface Property {
   description: string;
   amenities: string[];
   status: PropertyStatus;
-}
-
-export interface Service {
-  id: string;
-  title: string;
-  description: string;
+  /** The neighbourhood id from `src/data/vrindavan.ts`. */
+  neighbourhood?: string;
+  overview?: string[];
+  gallery?: { src: string; alt: string }[];
 }
 
 export interface Location {

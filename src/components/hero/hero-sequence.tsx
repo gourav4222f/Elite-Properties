@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { HeroCanvas } from "@/components/hero/hero-canvas";
@@ -64,10 +65,10 @@ export function HeroSequence() {
 
   useEffect(() => {
     document.documentElement.dataset.heroLoading = loaderRemoved ? "false" : "true";
-    setScrollLocked(!loaderRemoved);
+    setScrollLocked("hero-loader", !loaderRemoved);
     return () => {
       delete document.documentElement.dataset.heroLoading;
-      setScrollLocked(false);
+      setScrollLocked("hero-loader", false);
     };
   }, [loaderRemoved]);
 
@@ -378,7 +379,7 @@ export function HeroSequence() {
         <div className="hero-noscript">
           <p>Elite Properties</p>
           <h1>Find Your Place in Vrindavan.</h1>
-          <a href="#properties">Explore properties</a>
+          <Link href="/properties">Explore properties</Link>
         </div>
       </noscript>
     </section>

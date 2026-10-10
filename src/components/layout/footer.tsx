@@ -5,25 +5,23 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 import { contactDetails } from "@/data/contact";
+import { listingFilters } from "@/data/listings";
+import { chapters } from "@/data/site";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { getScrub, gsap } from "@/lib/gsap";
 import { createIvoryHeaderZone, setHeaderTone } from "@/lib/header-tone";
 import { scrollToTarget } from "@/lib/smooth-scroll";
 
-const exploreLinks = [
-  { label: "What we do", href: "#properties" },
-  { label: "Why Vrindavan", href: "#vrindavan" },
-  { label: "About", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Contact", href: "#contact" },
-];
+const exploreLinks = (["home", "about", "vrindavan", "properties", "services", "contact"] as const).map((key) => ({
+  label: chapters[key].label,
+  href: chapters[key].href,
+}));
 
 const propertyLinks = [
-  { label: "Selected properties", href: "#selected-properties" },
-  { label: "Residential", href: "#properties" },
-  { label: "Commercial", href: "#properties" },
-  { label: "Plots & Land", href: "#properties" },
-  { label: "Find a property", href: "#property-finder" },
+  { label: "All properties", href: "/properties" },
+  ...listingFilters
+    .filter((filter) => filter.id !== "all")
+    .map((filter) => ({ label: filter.label, href: `/properties?category=${filter.id}` })),
 ];
 
 export function Footer() {
@@ -118,7 +116,9 @@ export function Footer() {
 
       <div className="footer-bottom">
         <p suppressHydrationWarning>© {new Date().getFullYear()} Elite Properties. All rights reserved.</p>
-        <p>Vrindavan · Mathura</p>
+        <Link className="footer-link footer-legal" href="/privacy">
+          Privacy
+        </Link>
         <button type="button" className="footer-top-link" onClick={() => scrollToTarget(0)}>
           Back to top
           <ArrowUp aria-hidden="true" size={14} strokeWidth={1.5} />

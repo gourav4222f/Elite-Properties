@@ -2,18 +2,17 @@
 
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { chapterForPath, primaryNavigation } from "@/data/site";
 import { gsap, motionDurations, motionEasings } from "@/lib/gsap";
 
-const navigation = [
-  { label: "Properties", href: "#properties" },
-  { label: "Services", href: "#services" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
-];
-
 export function Header() {
+  const pathname = usePathname();
+  const activeHref = chapterForPath(pathname)?.href;
+  // The chapter's own page is the current page; a page within it (a property) is part of it.
+  const currentFor = (href: string) => (pathname === href ? "page" : activeHref === href ? "true" : undefined);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -93,14 +92,19 @@ export function Header() {
         </Link>
 
         <nav className="desktop-navigation" aria-label="Primary navigation">
-          {navigation.map((item) => (
-            <Link key={item.label} className="header-link" href={item.href}>
+          {primaryNavigation.map((item) => (
+            <Link
+              key={item.key}
+              className="header-link"
+              href={item.href}
+              aria-current={currentFor(item.href)}
+            >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <Link className="header-enquire" href="#contact">
+        <Link className="header-enquire" href="/contact#enquiry">
           <span>Enquire</span>
           <ArrowUpRight aria-hidden="true" size={15} strokeWidth={1.5} />
         </Link>
@@ -136,16 +140,21 @@ export function Header() {
           </div>
 
           <nav className="mobile-navigation" aria-label="Mobile primary navigation">
-            {navigation.map((item) => (
-              <div key={item.label} className="mobile-menu-link-mask">
-                <Link className="mobile-menu-link" href={item.href} onClick={closeMenu}>
+            {[{ key: "home", href: "/", label: "Home" }, ...primaryNavigation].map((item) => (
+              <div key={item.key} className="mobile-menu-link-mask">
+                <Link
+                  className="mobile-menu-link"
+                  href={item.href}
+                  onClick={closeMenu}
+                  aria-current={currentFor(item.href)}
+                >
                   {item.label}
                 </Link>
               </div>
             ))}
           </nav>
 
-          <Link className="mobile-menu-enquire" href="#contact" onClick={closeMenu}>
+          <Link className="mobile-menu-enquire" href="/contact#enquiry" onClick={closeMenu}>
             Enquire
             <ArrowUpRight aria-hidden="true" size={18} strokeWidth={1.5} />
           </Link>

@@ -96,13 +96,22 @@ export function About() {
         </figure>
         <div className="about-copy">
           <p data-reveal>{aboutIntroduction}</p>
-          <Link className="intent-link about-link" href="#contact" data-reveal>
-            <span className="intent-link-swap">
-              <span>Start a conversation</span>
-              <span aria-hidden="true">Start a conversation</span>
-            </span>
-            <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} />
-          </Link>
+          <div className="about-links" data-reveal>
+            <Link className="intent-link" href="/about">
+              <span className="intent-link-swap">
+                <span>Read our story</span>
+                <span aria-hidden="true">Read our story</span>
+              </span>
+              <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} />
+            </Link>
+            <Link className="intent-link" href="#contact">
+              <span className="intent-link-swap">
+                <span>Start a conversation</span>
+                <span aria-hidden="true">Start a conversation</span>
+              </span>
+              <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} />
+            </Link>
+          </div>
         </div>
       </div>
 

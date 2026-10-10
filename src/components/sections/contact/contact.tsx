@@ -28,15 +28,35 @@ function FieldError({ field, errors }: { field: EnquiryField; errors: EnquiryErr
   );
 }
 
-export function Contact() {
+interface ContactProps {
+  id?: string;
+  label?: string;
+  title?: readonly string[];
+  intro?: string;
+  /** Pre-fills the enquiry, e.g. on a property's own page. */
+  property?: string;
+  interest?: EnquiryInterest;
+}
+
+const DEFAULT_INTRO =
+  "Tell us what you are looking for, whether it is a home, a plot or a place for your business, and we will take it from there.";
+
+export function Contact({
+  id = "contact",
+  label = "07 / Contact",
+  title = ["Let's find", "your place."],
+  intro = DEFAULT_INTRO,
+  property: initialProperty = "",
+  interest: initialInterest = enquiryInterests[0],
+}: ContactProps = {}) {
   const rootRef = useRef<HTMLElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const confirmationRef = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errors, setErrors] = useState<EnquiryErrors>({});
-  const [interest, setInterest] = useState<EnquiryInterest>(enquiryInterests[0]);
-  const [property, setProperty] = useState("");
+  const [interest, setInterest] = useState<EnquiryInterest>(initialInterest);
+  const [property, setProperty] = useState(initialProperty);
   const [sentName, setSentName] = useState("");
 
   useEffect(() => {
@@ -126,18 +146,17 @@ export function Contact() {
   const describedBy = (field: EnquiryField) => (errors[field] ? `enquiry-${field}-error` : undefined);
 
   return (
-    <section ref={rootRef} id="contact" className="contact" aria-labelledby="contact-title">
+    <section ref={rootRef} id={id} className="contact" aria-labelledby={`${id}-title`} data-motion-owner>
       <div className="contact-heading">
         <div className="section-rule" data-reveal>
-          <span>07 / Contact</span>
+          <span>{label}</span>
           <i />
         </div>
-        <h2 id="contact-title" className="contact-title" data-reveal-lines>
-          <MaskedLines lines={["Let's find", "your place."]} />
+        <h2 id={`${id}-title`} className="contact-title" data-reveal-lines>
+          <MaskedLines lines={title} />
         </h2>
         <p className="contact-intro" data-reveal>
-          Tell us what you are looking for, whether it is a home, a plot or a place for your business, and we
-          will take it from there.
+          {intro}
         </p>
 
         <dl className="contact-details">
