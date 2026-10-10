@@ -6,7 +6,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import { gsap, motionEasings, ScrollTrigger } from "@/lib/gsap";
+import { useViewCursor } from "@/hooks/use-view-cursor";
+import { gsap, motionEasings } from "@/lib/gsap";
+import { createIvoryHeaderZone, setHeaderTone } from "@/lib/header-tone";
 
 import {
   budgetOptions,
@@ -86,17 +88,7 @@ export function PropertyIntent() {
     if (!root) return;
 
     const context = gsap.context(() => {
-      [".commercial-chapter", ".property-finder"].forEach((selector) => {
-        ScrollTrigger.create({
-          trigger: selector,
-          start: "top 5rem",
-          end: "bottom 5rem",
-          onEnter: () => { document.documentElement.dataset.headerTone = "ivory"; },
-          onEnterBack: () => { document.documentElement.dataset.headerTone = "ivory"; },
-          onLeave: () => { delete document.documentElement.dataset.headerTone; },
-          onLeaveBack: () => { delete document.documentElement.dataset.headerTone; },
-        });
-      });
+      [".commercial-chapter", ".property-finder"].forEach((selector) => createIvoryHeaderZone(selector));
 
       if (reducedMotion) {
         gsap.set("[data-intent-reveal], .intent-line > span, [data-image-reveal]", {
@@ -198,41 +190,11 @@ export function PropertyIntent() {
 
     return () => {
       context.revert();
-      delete document.documentElement.dataset.headerTone;
+      setHeaderTone("ink");
     };
   }, [reducedMotion]);
 
-  useEffect(() => {
-    const root = rootRef.current;
-    const cursor = cursorRef.current;
-    const finePointer = window.matchMedia("(pointer: fine)").matches;
-    if (!root || !cursor || !finePointer || reducedMotion) return;
-
-    const targets = Array.from(root.querySelectorAll<HTMLElement>("[data-cursor-view]"));
-    const moveX = gsap.quickTo(cursor, "x", { duration: 0.22, ease: "power3.out" });
-    const moveY = gsap.quickTo(cursor, "y", { duration: 0.22, ease: "power3.out" });
-
-    const handleMove = (event: PointerEvent) => {
-      moveX(event.clientX);
-      moveY(event.clientY);
-    };
-    const show = () => cursor.classList.add("is-visible");
-    const hide = () => cursor.classList.remove("is-visible");
-
-    window.addEventListener("pointermove", handleMove, { passive: true });
-    targets.forEach((target) => {
-      target.addEventListener("pointerenter", show);
-      target.addEventListener("pointerleave", hide);
-    });
-
-    return () => {
-      window.removeEventListener("pointermove", handleMove);
-      targets.forEach((target) => {
-        target.removeEventListener("pointerenter", show);
-        target.removeEventListener("pointerleave", hide);
-      });
-    };
-  }, [reducedMotion]);
+  useViewCursor(rootRef, cursorRef, !reducedMotion);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

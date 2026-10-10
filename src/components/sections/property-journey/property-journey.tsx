@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import { gsap, motionEasings, ScrollTrigger } from "@/lib/gsap";
+import { gsap, motionEasings } from "@/lib/gsap";
+import { createIvoryHeaderZone, setHeaderTone } from "@/lib/header-tone";
 import { propertyJourney } from "@/data/property-journey";
 
 import { JourneyPath } from "./journey-path";
@@ -61,15 +62,7 @@ export function PropertyJourney() {
         );
       }
 
-      ScrollTrigger.create({
-        trigger: ".journey-summary",
-        start: "top 5rem",
-        end: "bottom 5rem",
-        onEnter: () => { document.documentElement.dataset.headerTone = "ivory"; },
-        onEnterBack: () => { document.documentElement.dataset.headerTone = "ivory"; },
-        onLeave: () => { delete document.documentElement.dataset.headerTone; },
-        onLeaveBack: () => { delete document.documentElement.dataset.headerTone; },
-      });
+      createIvoryHeaderZone(".journey-summary");
 
       media.add("(min-width: 48rem)", () => {
         if (reducedMotion) return;
@@ -132,11 +125,10 @@ export function PropertyJourney() {
               const stageIndex = Math.min(propertyJourney.length - 1, Math.floor(progress * propertyJourney.length));
               setTraveller(progress);
               setActiveStage(stageIndex);
-              if (self.isActive && stageIndex >= 4) document.documentElement.dataset.headerTone = "ivory";
-              else if (self.isActive) delete document.documentElement.dataset.headerTone;
+              if (self.isActive) setHeaderTone(stageIndex >= 4 ? "ivory" : "ink");
             },
-            onLeave: () => { delete document.documentElement.dataset.headerTone; },
-            onLeaveBack: () => { delete document.documentElement.dataset.headerTone; },
+            onLeave: () => setHeaderTone("ink"),
+            onLeaveBack: () => setHeaderTone("ink"),
           },
         });
 
@@ -168,7 +160,7 @@ export function PropertyJourney() {
 
         return () => {
           activeStageRef.current = -1;
-          delete document.documentElement.dataset.headerTone;
+          setHeaderTone("ink");
         };
       });
 
@@ -207,19 +199,10 @@ export function PropertyJourney() {
         }
 
         [items[4], items[5]].forEach((item) => {
-          if (!item) return;
-          ScrollTrigger.create({
-            trigger: item,
-            start: "top 5rem",
-            end: "bottom 5rem",
-            onEnter: () => { document.documentElement.dataset.headerTone = "ivory"; },
-            onEnterBack: () => { document.documentElement.dataset.headerTone = "ivory"; },
-            onLeave: () => { delete document.documentElement.dataset.headerTone; },
-            onLeaveBack: () => { delete document.documentElement.dataset.headerTone; },
-          });
+          if (item) createIvoryHeaderZone(item);
         });
 
-        return () => { delete document.documentElement.dataset.headerTone; };
+        return () => setHeaderTone("ink");
       });
 
     }, root);
@@ -227,7 +210,7 @@ export function PropertyJourney() {
     return () => {
       media.revert();
       context.revert();
-      delete document.documentElement.dataset.headerTone;
+      setHeaderTone("ink");
     };
   }, [reducedMotion]);
 

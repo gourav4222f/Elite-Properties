@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { gsap, motionEasings, ScrollTrigger } from "@/lib/gsap";
+import { getHeaderLine, setHeaderTone } from "@/lib/header-tone";
 
 import { ArriveChapter } from "./arrive-chapter";
 import { DetailsChapter } from "./details-chapter";
@@ -24,35 +25,26 @@ export function SelectedSpaces() {
 
     const media = gsap.matchMedia();
     const context = gsap.context(() => {
-      const enterLightHeader = () => {
-        delete document.documentElement.dataset.headerTone;
-      };
       const syncHeaderTone = () => {
         const work = root.querySelector<HTMLElement>(".work-chapter");
         if (!work) return;
         const workBounds = work.getBoundingClientRect();
-        const headerLine = 80;
-        if (workBounds.top <= headerLine && workBounds.bottom > headerLine) {
-          document.documentElement.dataset.headerTone = "ivory";
-          return;
-        }
-        enterLightHeader();
+        const headerLine = getHeaderLine();
+        setHeaderTone(workBounds.top <= headerLine && workBounds.bottom > headerLine ? "ivory" : "ink");
       };
 
       ScrollTrigger.create({
         trigger: root,
-        start: "top 5rem",
-        end: "bottom 5rem",
+        start: () => `top ${getHeaderLine()}px`,
+        end: () => `bottom ${getHeaderLine()}px`,
         onEnter: syncHeaderTone,
         onEnterBack: syncHeaderTone,
         onUpdate: syncHeaderTone,
-        onRefresh: syncHeaderTone,
-        onLeave: () => {
-          delete document.documentElement.dataset.headerTone;
+        onRefresh: (self) => {
+          if (self.isActive) syncHeaderTone();
         },
-        onLeaveBack: () => {
-          document.documentElement.dataset.headerTone = "ivory";
-        },
+        onLeave: () => setHeaderTone("ink"),
+        onLeaveBack: () => setHeaderTone("ivory"),
       });
 
       if (reducedMotion) return;
@@ -218,7 +210,7 @@ export function SelectedSpaces() {
     return () => {
       media.revert();
       context.revert();
-      delete document.documentElement.dataset.headerTone;
+      setHeaderTone("ink");
     };
   }, [reducedMotion]);
 
@@ -244,14 +236,9 @@ export function SelectedSpaces() {
           <span className="spaces-line-mask"><span>what&apos;s available?</span></span>
         </h2>
         <span data-spaces-reveal>Explore selected opportunities across residential, commercial and land.</span>
-        <Link href="#properties" className="spaces-cta" data-spaces-reveal>
+        <Link href="#selected-properties" className="spaces-cta" data-spaces-reveal>
           Explore properties <ArrowUpRight aria-hidden="true" size={17} strokeWidth={1.5} />
         </Link>
-      </div>
-
-      <div className="selected-properties-placeholder spaces-next-placeholder" aria-labelledby="selected-properties-placeholder-title">
-        <p>06 / Selected properties</p>
-        <h2 id="selected-properties-placeholder-title">Places worth<br />your attention.</h2>
       </div>
     </section>
   );
