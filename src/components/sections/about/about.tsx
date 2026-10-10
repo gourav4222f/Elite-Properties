@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 
 import { aboutIntroduction, aboutStatement, principles } from "@/data/about";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import { gsap, motionEasings } from "@/lib/gsap";
+import { getScrub, gsap, motionEasings } from "@/lib/gsap";
 import { createIvoryHeaderZone, setHeaderTone } from "@/lib/header-tone";
 import { revealOnScroll } from "@/lib/reveal";
 
@@ -35,7 +35,7 @@ export function About() {
           opacity: 1,
           ease: "none",
           stagger: 0.08,
-          scrollTrigger: { trigger: ".about-statement", start: "top 78%", end: "bottom 42%", scrub: 0.5 },
+          scrollTrigger: { trigger: ".about-statement", start: "top 78%", end: "bottom 42%", scrub: getScrub() },
         },
       );
 
@@ -78,18 +78,16 @@ export function About() {
       </div>
 
       <div className="about-body">
-        <figure className="about-image about-image-primary" data-reveal-image>
+        <figure className="about-image about-image-primary" data-image="up" data-parallax="6">
           <Image
-            data-parallax="5"
             src="/images/lifestyle/happy-couple-outdoor-lifestyle.webp"
             alt="Couple smiling together outdoors in soft evening light"
             fill
             sizes="(max-width: 767px) 100vw, 40vw"
           />
         </figure>
-        <figure className="about-image about-image-secondary" data-reveal-image>
+        <figure className="about-image about-image-secondary" data-image="left" data-parallax="4">
           <Image
-            data-parallax="4"
             src="/images/commercial/reception-lobby-marble-desk.webp"
             alt="Calm reception lobby with a marble desk and sculptural lighting"
             fill

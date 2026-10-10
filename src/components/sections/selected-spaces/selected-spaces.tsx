@@ -5,8 +5,9 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import { gsap, motionEasings, ScrollTrigger } from "@/lib/gsap";
+import { getScrub, gsap, motionEasings, ScrollTrigger } from "@/lib/gsap";
 import { getHeaderLine, setHeaderTone } from "@/lib/header-tone";
+import { animateImages } from "@/lib/image-motion";
 
 import { ArriveChapter } from "./arrive-chapter";
 import { DetailsChapter } from "./details-chapter";
@@ -74,21 +75,7 @@ export function SelectedSpaces() {
         },
       );
 
-      root.querySelectorAll<HTMLElement>("[data-image-reveal]").forEach((figure) => {
-        const direction = figure.dataset.imageReveal;
-        if (direction === "open") return;
-        const from = direction === "horizontal" ? "inset(0 100% 0 0)" : "inset(100% 0 0 0)";
-        gsap.fromTo(
-          figure.querySelector(".spaces-image-frame"),
-          { clipPath: from },
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 1.15,
-            ease: motionEasings.cinematic,
-            scrollTrigger: { trigger: figure, start: "top 84%", once: true },
-          },
-        );
-      });
+      animateImages(root);
 
       root.querySelectorAll<HTMLElement>("[data-chapter-copy]").forEach((copy) => {
         gsap.fromTo(
@@ -111,7 +98,7 @@ export function SelectedSpaces() {
         {
           xPercent: 7,
           ease: "none",
-          scrollTrigger: { trigger: ".arrive-chapter", start: "top bottom", end: "bottom top", scrub: 0.5 },
+          scrollTrigger: { trigger: ".arrive-chapter", start: "top bottom", end: "bottom top", scrub: getScrub() },
         },
       );
 
@@ -121,7 +108,7 @@ export function SelectedSpaces() {
         {
           scale: 1,
           ease: "none",
-          scrollTrigger: { trigger: ".spaces-full-bleed", start: "top bottom", end: "bottom top", scrub: 0.45 },
+          scrollTrigger: { trigger: ".spaces-full-bleed", start: "top bottom", end: "bottom top", scrub: getScrub() },
         },
       );
 
@@ -151,27 +138,12 @@ export function SelectedSpaces() {
       );
 
       media.add("(min-width: 48rem)", () => {
-        root.querySelectorAll<HTMLElement>(".spaces-image[data-depth]").forEach((figure) => {
-          const image = figure.querySelector<HTMLElement>(".spaces-image-media");
-          if (!image || figure.classList.contains("live-full-bleed")) return;
-          const amount = figure.dataset.depth === "foreground" ? 7 : figure.dataset.depth === "background" ? 3 : 5;
-          gsap.fromTo(
-            image,
-            { yPercent: -amount },
-            {
-              yPercent: amount,
-              ease: "none",
-              scrollTrigger: { trigger: figure, start: "top bottom", end: "bottom top", scrub: 0.45 },
-            },
-          );
-        });
-
         gsap.timeline({
           scrollTrigger: {
             trigger: ".outside-inside",
             start: "top top",
             end: "bottom bottom",
-            scrub: 0.45,
+            scrub: getScrub(),
           },
         })
           .fromTo(".crossing-exterior", { yPercent: 0, scale: 1 }, { yPercent: -8, scale: 0.94, ease: "none" }, 0)
@@ -180,27 +152,13 @@ export function SelectedSpaces() {
       });
 
       media.add("(max-width: 47.999rem)", () => {
-        root.querySelectorAll<HTMLElement>(".spaces-image[data-depth]").forEach((figure) => {
-          const image = figure.querySelector<HTMLElement>(".spaces-image-media");
-          if (!image || figure.classList.contains("live-full-bleed")) return;
-          gsap.fromTo(
-            image,
-            { yPercent: -2 },
-            {
-              yPercent: 2,
-              ease: "none",
-              scrollTrigger: { trigger: figure, start: "top bottom", end: "bottom top", scrub: 0.5 },
-            },
-          );
-        });
-
         gsap.fromTo(
           ".crossing-interior",
           { yPercent: 12 },
           {
             yPercent: 0,
             ease: "none",
-            scrollTrigger: { trigger: ".outside-inside", start: "top 70%", end: "bottom bottom", scrub: 0.45 },
+            scrollTrigger: { trigger: ".outside-inside", start: "top 70%", end: "bottom bottom", scrub: getScrub() },
           },
         );
       });

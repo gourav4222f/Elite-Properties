@@ -20,3 +20,11 @@ export const motionEasings = {
 } as const;
 
 export { gsap, ScrollTrigger };
+
+/**
+ * Scrub for every scroll-linked animation. Wheel input is already smoothed by Lenis, so
+ * animations follow it directly; native touch scrolling gets a light lerp instead.
+ */
+export function getScrub() {
+  return ScrollTrigger.isTouch === 1 ? 0.4 : true;
+}

@@ -203,8 +203,7 @@ button {
 
 /* Production header */
 
-html[data-hero-loading="true"],
-html[data-hero-loading="true"].lenis.lenis-stopped {
+html[data-hero-loading="true"] {
   overflow: hidden;
 }
 
@@ -405,6 +404,15 @@ html[data-header-tone="ivory"] .site-header {
   height: 100lvh;
   overflow: hidden;
   background-color: var(--elite-ink);
+}
+
+.hero-shade {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  background: var(--elite-ink);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .hero-frame {
@@ -1301,7 +1309,6 @@ html[data-header-tone="ivory"] .site-header {
 .intent-image img {
   object-fit: cover;
   transition: scale 750ms cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -2836,14 +2843,11 @@ html[data-header-tone="ivory"] .site-header {
   height: 100%;
   overflow: hidden;
   background: var(--elite-sand);
-  will-change: clip-path;
 }
 
 .spaces-image-media {
   object-fit: cover;
   object-position: var(--image-position);
-  transform: scale(1.1);
-  will-change: transform;
 }
 
 .spaces-image figcaption {
@@ -3838,10 +3842,6 @@ html[data-header-tone="ivory"] .site-header {
   overflow: hidden;
 }
 
-.place-connect-media img {
-  scale: 1.14;
-}
-
 .place-connect-media::after {
   position: absolute;
   inset: 0;
@@ -4003,10 +4003,6 @@ html[data-header-tone="ivory"] .site-header {
   margin: 0;
   overflow: hidden;
   background: var(--elite-olive);
-}
-
-.about-image img {
-  scale: 1.12;
 }
 
 .about-image-primary {

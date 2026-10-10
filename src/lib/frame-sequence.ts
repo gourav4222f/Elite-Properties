@@ -11,6 +11,7 @@ export const HERO_SEQUENCE = {
   warmConcurrency: 2,
   lookAhead: 36,
   lookBehind: 10,
+  previewStride: 12,
 } as const;
 
 export type HeroChapterId =

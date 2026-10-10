@@ -41,7 +41,14 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
       stopInertiaOnNavigate: true,
     });
 
-    lenis.on("scroll", ScrollTrigger.update);
+    // ScrollTrigger already updates on native scroll events (touch, keyboard). Lenis only has
+    // to hand over the positions it animates itself, so each scroll is processed once.
+    lenis.on("scroll", (instance: Lenis) => {
+      if (instance.isScrolling === "smooth") ScrollTrigger.update();
+    });
+    // Lenis rewrites its classes on <html> whenever scrolling starts or stops, which restyles
+    // the whole document mid-gesture. Its base class is kept; the churn is switched off.
+    Object.assign(lenis, { updateClassName: () => undefined });
     registerLenis(lenis);
 
     const update = (time: number) => {
