@@ -7,8 +7,9 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { useViewCursor } from "@/hooks/use-view-cursor";
-import { gsap, motionEasings } from "@/lib/gsap";
+import { getScrub, gsap, motionEasings } from "@/lib/gsap";
 import { createIvoryHeaderZone, setHeaderTone } from "@/lib/header-tone";
+import { animateImages } from "@/lib/image-motion";
 
 import {
   budgetOptions,
@@ -47,6 +48,7 @@ function PropertyImage({
   href,
   className,
   parallax,
+  reveal = "up",
   sizes,
 }: {
   src: string;
@@ -54,6 +56,7 @@ function PropertyImage({
   href: string;
   className: string;
   parallax: string;
+  reveal?: "up" | "left";
   sizes: string;
 }) {
   return (
@@ -61,11 +64,11 @@ function PropertyImage({
       className={`intent-image ${className}`}
       href={href}
       data-cursor-view
-      data-image-reveal
+      data-image={reveal}
+      data-parallax={parallax}
       aria-label={`View ${alt.toLowerCase()}`}
     >
       <Image
-        data-parallax={parallax}
         src={src}
         alt={alt}
         fill
@@ -91,9 +94,7 @@ export function PropertyIntent() {
       [".commercial-chapter", ".property-finder"].forEach((selector) => createIvoryHeaderZone(selector));
 
       if (reducedMotion) {
-        gsap.set("[data-intent-reveal], .intent-line > span, [data-image-reveal]", {
-          clearProps: "all",
-        });
+        gsap.set("[data-intent-reveal], .intent-line > span", { clearProps: "all" });
         return;
       }
 
@@ -128,36 +129,7 @@ export function PropertyIntent() {
         }
       });
 
-      gsap.utils.toArray<HTMLElement>("[data-image-reveal]").forEach((wrapper) => {
-        gsap.fromTo(
-          wrapper,
-          { clipPath: "inset(12% 0 0 0)" },
-          {
-            clipPath: "inset(0% 0 0 0)",
-            duration: 1.15,
-            ease: motionEasings.cinematic,
-            scrollTrigger: { trigger: wrapper, start: "top 82%", once: true },
-          },
-        );
-      });
-
-      gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((image) => {
-        const amount = Number(image.dataset.parallax ?? 5);
-        gsap.fromTo(
-          image,
-          { yPercent: -amount, scale: 1.08 },
-          {
-            yPercent: amount,
-            ease: "none",
-            scrollTrigger: {
-              trigger: image.parentElement,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 0.5,
-            },
-          },
-        );
-      });
+      animateImages(root);
 
       gsap.fromTo(
         ".intent-graphic-word",
@@ -169,7 +141,7 @@ export function PropertyIntent() {
             trigger: ".intent-graphic-word",
             start: "top bottom",
             end: "bottom top",
-            scrub: 0.7,
+            scrub: getScrub(),
           },
         },
       );
@@ -181,7 +153,7 @@ export function PropertyIntent() {
           {
             yPercent: -8,
             ease: "none",
-            scrollTrigger: { trigger: number.parentElement, start: "top bottom", end: "bottom top", scrub: 0.8 },
+            scrollTrigger: { trigger: number.parentElement, start: "top bottom", end: "bottom top", scrub: getScrub() },
           },
         );
       });
@@ -258,7 +230,7 @@ export function PropertyIntent() {
             <span>{commercial.metadata}</span>
           </div>
         </div>
-        <PropertyImage src={commercial.image} alt={commercial.imageAlt} href={commercial.href} className="commercial-image" parallax="5" sizes="(max-width: 767px) 100vw, 62vw" />
+        <PropertyImage src={commercial.image} alt={commercial.imageAlt} href={commercial.href} className="commercial-image" parallax="5" reveal="left" sizes="(max-width: 767px) 100vw, 62vw" />
       </article>
 
       <article className="property-chapter land-chapter" data-reveal-group>

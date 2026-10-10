@@ -18,6 +18,7 @@ import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { useViewCursor } from "@/hooks/use-view-cursor";
 import { requestEnquiry } from "@/lib/enquiry";
 import { gsap, motionEasings, ScrollTrigger } from "@/lib/gsap";
+import { animateImage } from "@/lib/image-motion";
 import { revealOnScroll } from "@/lib/reveal";
 import type { Property } from "@/types/property";
 
@@ -91,8 +92,7 @@ export function SelectedProperties() {
   const rootRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLUListElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
-  const changingRef = useRef(false);
-  const revealTriggersRef = useRef<ScrollTrigger[]>([]);
+  const firstPassRef = useRef(true);
   const reducedMotion = usePrefersReducedMotion();
   const [filter, setFilter] = useState<ListingFilter>("all");
   const visible = listings.filter((property) => matchesFilter(property, filter));
@@ -101,60 +101,52 @@ export function SelectedProperties() {
     const root = rootRef.current;
     if (!root || reducedMotion) return;
 
-    const context = gsap.context(() => {
-      revealOnScroll(root);
-
-      const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-listing-card]"));
-      gsap.set(root.querySelectorAll("[data-listing-frame]"), { clipPath: "inset(100% 0% 0% 0%)" });
-      gsap.set(root.querySelectorAll(".listing-body"), { y: 26, autoAlpha: 0 });
-
-      revealTriggersRef.current = ScrollTrigger.batch(cards, {
-        start: "top 86%",
-        once: true,
-        onEnter: (batch) => {
-          batch.forEach((card, index) => {
-            gsap.to(card.querySelector("[data-listing-frame]"), {
-              clipPath: "inset(0% 0% 0% 0%)",
-              duration: 1.2,
-              delay: index * 0.12,
-              ease: motionEasings.cinematic,
-            });
-            gsap.to(card.querySelector(".listing-body"), {
-              y: 0,
-              autoAlpha: 1,
-              duration: 0.85,
-              delay: 0.25 + index * 0.12,
-              ease: motionEasings.enter,
-            });
-          });
-        },
-      });
-    }, root);
-
-    return () => {
-      revealTriggersRef.current = [];
-      context.revert();
-    };
+    const context = gsap.context(() => revealOnScroll(root), root);
+    return () => context.revert();
   }, [reducedMotion]);
 
-  // New cards settle in after a filter change, then trigger positions below are re-measured.
+  // Card imagery is rebuilt whenever the visible set changes: the first pass reveals on
+  // scroll, later passes settle cards in place, and every pass keeps the parallax.
   useLayoutEffect(() => {
     const grid = gridRef.current;
-    if (!changingRef.current || !grid) return;
-    changingRef.current = false;
+    if (!grid || reducedMotion) return;
+    const firstPass = firstPassRef.current;
+    firstPassRef.current = false;
 
-    // Every card is now in view by choice, so the first-pass scroll reveals are retired.
-    revealTriggersRef.current.forEach((trigger) => trigger.kill());
-    revealTriggersRef.current = [];
-    gsap.set(grid.querySelectorAll("[data-listing-frame]"), { clipPath: "inset(0% 0% 0% 0%)" });
-    gsap.set(grid.querySelectorAll(".listing-body"), { autoAlpha: 1, y: 0 });
-    gsap.fromTo(
-      grid.querySelectorAll("[data-listing-card]"),
-      { autoAlpha: 0, y: 28 },
-      { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.08, ease: motionEasings.enter, clearProps: "transform" },
-    );
-    ScrollTrigger.refresh();
-  }, [filter]);
+    const context = gsap.context(() => {
+      grid.querySelectorAll<HTMLElement>("[data-listing-frame]").forEach((frame) => {
+        animateImage(frame, { reveal: firstPass ? "up" : "none", parallax: 4 });
+      });
+
+      if (firstPass) {
+        grid.querySelectorAll<HTMLElement>(".listing-body").forEach((body) => {
+          gsap.fromTo(
+            body,
+            { y: 26, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.9,
+              delay: 0.2,
+              ease: motionEasings.enter,
+              scrollTrigger: { trigger: body, start: "top 94%", once: true },
+            },
+          );
+        });
+        return;
+      }
+
+      gsap.fromTo(
+        grid.querySelectorAll("[data-listing-card]"),
+        { autoAlpha: 0, y: 28 },
+        { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.08, ease: motionEasings.enter, clearProps: "transform" },
+      );
+    }, grid);
+
+    // The grid's height changed, so everything below re-measures its trigger positions.
+    if (!firstPass) ScrollTrigger.refresh();
+    return () => context.revert();
+  }, [filter, reducedMotion]);
 
   useViewCursor(rootRef, cursorRef, !reducedMotion);
 
@@ -175,10 +167,7 @@ export function SelectedProperties() {
       stagger: 0.03,
       ease: motionEasings.exit,
       overwrite: true,
-      onComplete: () => {
-        changingRef.current = true;
-        setFilter(next);
-      },
+      onComplete: () => setFilter(next),
     });
   };
 

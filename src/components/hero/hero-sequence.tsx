@@ -9,8 +9,8 @@ import { HeroStory } from "@/components/hero/hero-story";
 import { useFrameSequence } from "@/hooks/use-frame-sequence";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { getChapterAtProgress, getFramePath, HERO_CHAPTERS, HERO_SEQUENCE } from "@/lib/frame-sequence";
-import { gsap, motionEasings } from "@/lib/gsap";
-import { setHeaderTone } from "@/lib/header-tone";
+import { gsap, motionEasings, ScrollTrigger } from "@/lib/gsap";
+import { getHeaderLine, setHeaderTone } from "@/lib/header-tone";
 import { setScrollLocked } from "@/lib/smooth-scroll";
 
 // Never hold visitors behind the loader for longer than this on slow connections.
@@ -157,15 +157,16 @@ export function HeroSequence() {
             progressNumberRef.current.textContent = String(chapterIds.indexOf(chapter.id) + 1).padStart(2, "0");
           }
         },
+        // Lenis already smooths the wheel, so the story follows the scroll directly; a second
+        // layer of scrub smoothing is what made the footage feel like it was trailing behind.
         scrollTrigger: {
           trigger: hero,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.3,
-          pin: stage,
-          pinSpacing: false,
-          anticipatePin: 1,
+          scrub: true,
           invalidateOnRefresh: true,
+          // Leaving forward always lands on the final chapter, whatever was skipped on the way.
+          onLeave: () => setHeaderTone("ink"),
         },
       });
       timelineRef.current = timeline;
@@ -298,13 +299,48 @@ export function HeroSequence() {
       revealChapter("brand", 0.846, 0.9, "left");
       revealChapter("final", 0.932, null, "left");
 
-      // The pinned stage itself must not be transformed, so the settle happens on its child.
-      timeline.fromTo(
-        frame,
-        { scale: 1 },
-        { scale: 0.975, duration: 0.03, ease: motionEasings.cinematic },
-        0.97,
-      );
+      // Every tween reads its starting styles on first render. Doing that now, behind the
+      // loader, keeps the first pass through each chapter free of style reads.
+      const settledProgress = timeline.progress();
+      timeline.progress(1, true).progress(settledProgress, true);
+
+      // The stage holds until the next chapter has slid fully over it, receding and dimming
+      // underneath, so the hand-off reads as one continuous camera move.
+      const next = hero.nextElementSibling;
+      ScrollTrigger.create({
+        trigger: hero,
+        start: "top top",
+        endTrigger: next ?? hero,
+        end: next ? "top top" : "bottom bottom",
+        pin: stage,
+        pinSpacing: false,
+        invalidateOnRefresh: true,
+      });
+
+      if (next) {
+        // The pinned stage itself must not be transformed, so the recession happens on its child.
+        gsap
+          .timeline({
+            defaults: { ease: "none" },
+            scrollTrigger: {
+              trigger: hero,
+              start: "bottom bottom",
+              endTrigger: next,
+              end: "top top",
+              scrub: true,
+              // Once the shade deepens, the header reads in ivory until the next chapter's top
+              // edge (which rises linearly across this range) passes beneath it.
+              onUpdate: (self) => {
+                const nextTop = (1 - self.progress) * (self.end - self.start);
+                setHeaderTone(self.progress > 0.4 && nextTop > getHeaderLine() ? "ivory" : "ink");
+              },
+              onLeave: () => setHeaderTone("ink"),
+              onLeaveBack: () => setHeaderTone("ink"),
+            },
+          })
+          .fromTo(frame, { scale: 1 }, { scale: 0.94 }, 0)
+          .fromTo(".hero-shade", { opacity: 0 }, { opacity: 0.55 }, 0);
+      }
     }, hero);
 
     return () => {
@@ -329,6 +365,7 @@ export function HeroSequence() {
           <HeroCanvas canvasRef={canvasRef} reducedMotion={reducedMotion} />
           <HeroStory />
         </div>
+        <div className="hero-shade" aria-hidden="true" />
         {!reducedMotion ? (
           <HeroProgress fillRef={progressFillRef} numberRef={progressNumberRef} />
         ) : null}

@@ -28,6 +28,7 @@ export function LiveChapter() {
           className="live-full-bleed"
           reveal="open"
           depth="background"
+          parallax={0}
         />
         <p><span>Space,</span><span>felt differently.</span></p>
       </div>

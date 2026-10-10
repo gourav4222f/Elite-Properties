@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 
 import { contactDetails } from "@/data/contact";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import { gsap } from "@/lib/gsap";
+import { getScrub, gsap } from "@/lib/gsap";
 import { createIvoryHeaderZone, setHeaderTone } from "@/lib/header-tone";
 import { scrollToTarget } from "@/lib/smooth-scroll";
 
@@ -45,7 +45,7 @@ export function Footer() {
         {
           yPercent: 0,
           ease: "none",
-          scrollTrigger: { trigger: root, start: "top bottom", end: "bottom bottom", scrub: 0.6 },
+          scrollTrigger: { trigger: root, start: "top bottom", end: "bottom bottom", scrub: getScrub() },
         },
       );
     }, root);

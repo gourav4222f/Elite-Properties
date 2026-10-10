@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { MaskedLines } from "@/components/motion/masked-lines";
 import { driveTimes, placeReasons } from "@/data/vrindavan";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import { gsap, motionEasings } from "@/lib/gsap";
+import { getScrub, gsap, motionEasings } from "@/lib/gsap";
 import { createIvoryHeaderZone, setHeaderTone } from "@/lib/header-tone";
 import { revealOnScroll } from "@/lib/reveal";
 
@@ -48,7 +48,7 @@ export function WhyVrindavan() {
           {
             scaleX: 1,
             ease: "none",
-            scrollTrigger: { trigger: ".place-drive-times", start: "top 92%", end: "top 55%", scrub: 0.4 },
+            scrollTrigger: { trigger: ".place-drive-times", start: "top 92%", end: "top 55%", scrub: getScrub() },
           },
         );
       }
@@ -167,7 +167,7 @@ export function WhyVrindavan() {
                 <p>{reason.summary}</p>
                 <p className="place-reason-tags">{reason.tags}</p>
               </div>
-              <figure className="place-reason-thumb">
+              <figure className="place-reason-thumb" data-image="up" data-parallax="4">
                 <Image src={reason.image.src} alt={reason.image.alt} fill sizes="(max-width: 767px) 88vw, 40vw" />
               </figure>
             </li>
@@ -184,9 +184,8 @@ export function WhyVrindavan() {
       </div>
 
       <section className="place-connect" aria-labelledby="place-connect-title">
-        <div className="place-connect-media" data-reveal-image>
+        <div className="place-connect-media" data-image="up" data-parallax="7">
           <Image
-            data-parallax="6"
             src="/images/infrastructure/city-highway-flyover-night-aerial.jpg"
             alt="Highway interchange lit up at night"
             fill

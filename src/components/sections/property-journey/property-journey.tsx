@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import { gsap, motionEasings } from "@/lib/gsap";
+import { getScrub, gsap, motionEasings } from "@/lib/gsap";
 import { createIvoryHeaderZone, setHeaderTone } from "@/lib/header-tone";
 import { propertyJourney } from "@/data/property-journey";
 
@@ -118,7 +118,7 @@ export function PropertyJourney() {
             start: "top top",
             end: "+=400%",
             pin: true,
-            scrub: 0.32,
+            scrub: getScrub(),
             invalidateOnRefresh: true,
             onUpdate: (self) => {
               const progress = Math.min(1, Math.max(0, self.progress));
@@ -178,7 +178,7 @@ export function PropertyJourney() {
                 trigger: ".journey-stage-list",
                 start: "top 65%",
                 end: "bottom 55%",
-                scrub: 0.35,
+                scrub: getScrub(),
               },
             },
           );

@@ -3,8 +3,11 @@ import { ScrollTrigger } from "@/lib/gsap";
 export type HeaderTone = "ink" | "ivory";
 
 export function setHeaderTone(tone: HeaderTone) {
-  if (tone === "ivory") document.documentElement.dataset.headerTone = "ivory";
-  else delete document.documentElement.dataset.headerTone;
+  const root = document.documentElement;
+  // Callers fire on every scroll update; only a real change touches the DOM.
+  if ((root.dataset.headerTone === "ivory" ? "ivory" : "ink") === tone) return;
+  if (tone === "ivory") root.dataset.headerTone = "ivory";
+  else delete root.dataset.headerTone;
 }
 
 /** The vertical midline of the fixed header, where a tone change should happen. */
