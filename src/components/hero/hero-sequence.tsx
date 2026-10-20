@@ -2,13 +2,13 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { HeroCanvas } from "@/components/hero/hero-canvas";
 import { HeroLoader } from "@/components/hero/hero-loader";
 import { HeroProgress } from "@/components/hero/hero-progress";
 import { HeroStory } from "@/components/hero/hero-story";
-import { useFrameSequence } from "@/hooks/use-frame-sequence";
+import { HeroVideo } from "@/components/hero/hero-video";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import { getChapterAtProgress, getFramePath, HERO_CHAPTERS, HERO_SEQUENCE } from "@/lib/frame-sequence";
+import { useScrollVideo } from "@/hooks/use-scroll-video";
+import { getChapterAtProgress, HERO_CHAPTERS, HERO_VIDEO } from "@/lib/hero-video";
 import { gsap, motionEasings, ScrollTrigger } from "@/lib/gsap";
 import { getHeaderLine, setHeaderTone } from "@/lib/header-tone";
 import { setScrollLocked } from "@/lib/smooth-scroll";
@@ -36,9 +36,7 @@ export function HeroSequence() {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const entranceRef = useRef<gsap.core.Timeline | null>(null);
   const reducedMotion = usePrefersReducedMotion();
-  const { canvasRef, criticalProgress, criticalReady, requestFrame } = useFrameSequence({
-    reducedMotion,
-  });
+  const { videoRef, loadProgress, ready: filmReady, requestProgress } = useScrollVideo({ reducedMotion });
   const [fontsReady, setFontsReady] = useState(false);
   const [loaderTimedOut, setLoaderTimedOut] = useState(false);
   const [loaderExiting, setLoaderExiting] = useState(false);
@@ -46,9 +44,9 @@ export function HeroSequence() {
 
   const loaderProgress = useMemo(() => {
     if (loaderTimedOut) return 1;
-    const framePortion = criticalProgress * 0.92;
-    return Math.min(1, framePortion + (fontsReady ? 0.08 : 0));
-  }, [criticalProgress, fontsReady, loaderTimedOut]);
+    const filmPortion = loadProgress * 0.92;
+    return Math.min(1, filmPortion + (fontsReady ? 0.08 : 0));
+  }, [loadProgress, fontsReady, loaderTimedOut]);
 
   useEffect(() => {
     let active = true;
@@ -72,7 +70,7 @@ export function HeroSequence() {
   }, [loaderRemoved]);
 
   useEffect(() => {
-    const ready = (criticalReady && fontsReady) || loaderTimedOut;
+    const ready = (filmReady && fontsReady) || loaderTimedOut;
     if (!ready || loaderRemoved) return;
 
     const exitTimer = window.setTimeout(() => setLoaderExiting(true), 180);
@@ -82,7 +80,7 @@ export function HeroSequence() {
       window.clearTimeout(exitTimer);
       window.clearTimeout(removeTimer);
     };
-  }, [criticalReady, fontsReady, loaderRemoved, loaderTimedOut]);
+  }, [filmReady, fontsReady, loaderRemoved, loaderTimedOut]);
 
   // The opening lines rise as the loader wipes away, instead of sitting static beneath it.
   useEffect(() => {
@@ -122,14 +120,11 @@ export function HeroSequence() {
 
     setHeaderTone("ivory");
 
-    if (reducedMotion) {
-      requestFrame(606);
-      return () => setHeaderTone("ink");
-    }
+    if (reducedMotion) return () => setHeaderTone("ink");
 
     let activeChapter = "";
     const chapterIds = HERO_CHAPTERS.map((chapter) => chapter.id);
-    const sequence = { frame: HERO_SEQUENCE.frameStart };
+    const film = { progress: 0 };
 
     const context = gsap.context(() => {
       const chapters = gsap.utils.toArray<HTMLElement>(".hero-chapter");
@@ -171,11 +166,7 @@ export function HeroSequence() {
       });
       timelineRef.current = timeline;
 
-      timeline.to(
-        sequence,
-        { frame: HERO_SEQUENCE.frameEnd, duration: 1, onUpdate: () => requestFrame(sequence.frame) },
-        0,
-      );
+      timeline.to(film, { progress: 1, duration: 1, onUpdate: () => requestProgress(film.progress) }, 0);
 
       if (progressFillRef.current) {
         timeline.fromTo(progressFillRef.current, { scaleY: 0 }, { scaleY: 1, duration: 1 }, 0);
@@ -348,7 +339,7 @@ export function HeroSequence() {
       context.revert();
       setHeaderTone("ink");
     };
-  }, [reducedMotion, requestFrame]);
+  }, [reducedMotion, requestProgress]);
 
   return (
     <section
@@ -360,9 +351,9 @@ export function HeroSequence() {
         <div
           ref={frameRef}
           className="hero-frame"
-          style={{ backgroundImage: `url('${getFramePath(reducedMotion ? 606 : 1)}')` }}
+          style={{ backgroundImage: `url('${reducedMotion ? HERO_VIDEO.still : HERO_VIDEO.poster}')` }}
         >
-          <HeroCanvas canvasRef={canvasRef} reducedMotion={reducedMotion} />
+          <HeroVideo videoRef={videoRef} reducedMotion={reducedMotion} />
           <HeroStory />
         </div>
         <div className="hero-shade" aria-hidden="true" />

@@ -424,7 +424,7 @@ html[data-header-tone="ivory"] .site-header {
 }
 
 .hero-media,
-.hero-canvas,
+.hero-video,
 .hero-film-treatment,
 .hero-static-scrim,
 .hero-story,
@@ -433,9 +433,11 @@ html[data-header-tone="ivory"] .site-header {
   inset: 0;
 }
 
-.hero-canvas {
+.hero-video {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  pointer-events: none;
 }
 
 .hero-film-treatment {
