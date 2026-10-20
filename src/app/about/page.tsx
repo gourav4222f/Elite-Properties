@@ -21,9 +21,15 @@ export default function AboutPage() {
       <main id="main-content">
         <PageHero
           eyebrow="About / Elite Properties"
+          counter="03 / 04"
+          kicker="Vrindavan · Mathura"
           titleLines={["Local roots.", "Considered", "advice."]}
-          offset={[1]}
           intro={aboutIntroduction}
+          actions={[
+            { label: "Our approach", href: "#approach" },
+            { label: "Work with us", href: "#contact", variant: "glass" },
+          ]}
+          dockLabel="Read our story"
           image={{
             src: "/images/interiors/luxury-drawing-room-sofa-dining-area.jpg",
             alt: "Spacious drawing room with connected sofa and dining areas",

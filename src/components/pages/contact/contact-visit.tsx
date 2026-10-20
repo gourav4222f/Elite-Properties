@@ -30,7 +30,7 @@ export function ContactVisit() {
   }, [reducedMotion]);
 
   return (
-    <section ref={rootRef} className="visit" aria-labelledby="visit-title">
+    <section ref={rootRef} id="visit" className="visit" aria-labelledby="visit-title">
       <figure className="visit-media" data-image="none" data-parallax="10">
         <Image
           src="/images/properties/gated-community-entrance-sunset.png"

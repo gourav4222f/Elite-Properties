@@ -38,7 +38,7 @@ export function AboutStory() {
   }, [reducedMotion]);
 
   return (
-    <section ref={rootRef} className="story" aria-labelledby="story-title">
+    <section ref={rootRef} id="approach" className="story" aria-labelledby="story-title">
       <div className="section-rule" data-reveal>
         <span>01 / Our approach</span>
         <i />
@@ -72,8 +72,8 @@ export function AboutStory() {
         </div>
         <figure className="story-image story-image-secondary" data-image="left" data-parallax="4">
           <Image
-            src="/images/lifestyle/happy-couple-outdoor-lifestyle.webp"
-            alt="Couple smiling together outdoors in soft evening light"
+            src="/images/interiors/dining-nook-wooden-panel-apartment.webp"
+            alt="Dining nook with warm wooden wall panels and a pendant light"
             fill
             sizes="(max-width: 767px) 72vw, 30vw"
           />

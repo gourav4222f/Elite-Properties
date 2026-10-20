@@ -21,25 +21,20 @@ export default function ServicesPage() {
       <main id="main-content">
         <PageHero
           eyebrow="Services / Elite Properties"
+          counter="02 / 04"
+          kicker="Property services"
           titleLines={["Every step,", "handled."]}
-          offset={[1]}
           intro="Advice, search, visits, finance, paperwork and management under one roof, so a property decision feels considered rather than complicated."
+          actions={[
+            { label: "Explore services", href: "#what-we-do" },
+            { label: "Talk to us", href: "#contact", variant: "glass" },
+          ]}
+          dockLabel={`${services.length} ways we help`}
           image={{
             src: "/images/interiors/luxury-living-room-chandelier-curtains.jpg",
             alt: "Bright living room with layered curtains, soft seating and a chandelier",
           }}
-        >
-          <ul className="page-hero-links" aria-label="Jump to a service">
-            {services.map((service) => (
-              <li key={service.id}>
-                <a href={`#${service.id}`}>
-                  <span>{service.number}</span>
-                  {service.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </PageHero>
+        />
         <ServicesIndex />
         <ServicesProcess />
         <Contact eyebrow="03 / Contact" />

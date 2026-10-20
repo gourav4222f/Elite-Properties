@@ -1,18 +1,18 @@
 "use client";
 
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef } from "react";
 
 import { MaskedLines } from "@/components/motion/masked-lines";
-import { enquireAbout, ListingCard } from "@/components/sections/selected-properties/listing-card";
-import { propertyStatusLabels, propertyTypeLabels } from "@/data/listings";
+import { PageHero } from "@/components/layout/page-hero";
+import { enquireAbout, ListingCard, propertyFacts } from "@/components/sections/selected-properties/listing-card";
+import { listings, propertyStatusLabels, propertyTypeLabels } from "@/data/listings";
 import { propertyJourney } from "@/data/property-journey";
 import { propertiesHref } from "@/data/navigation";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { useViewCursor } from "@/hooks/use-view-cursor";
-import { getScrub, gsap, motionEasings } from "@/lib/gsap";
+import { gsap, motionEasings } from "@/lib/gsap";
 import { createIvoryHeaderZone, setHeaderTone } from "@/lib/header-tone";
 import { animateImage } from "@/lib/image-motion";
 import { revealOnScroll } from "@/lib/reveal";
@@ -47,31 +47,19 @@ interface PropertyDetailProps {
 }
 
 export function PropertyDetail({ property, related }: PropertyDetailProps) {
-  const heroRef = useRef<HTMLElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const relatedRef = useRef<HTMLElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
+  const position = listings.findIndex((item) => item.id === property.id);
 
   useEffect(() => {
-    const hero = heroRef.current;
     const body = bodyRef.current;
-    if (!hero || !body) return;
+    if (!body) return;
 
     const context = gsap.context(() => {
-      createIvoryHeaderZone(hero);
       createIvoryHeaderZone(".property-support");
       if (reducedMotion) return;
-
-      const frame = hero.querySelector<HTMLElement>("[data-hero-frame]");
-      if (frame) animateImage(frame, { reveal: "none", parallax: 9 });
-
-      gsap.to(".property-hero-content", {
-        yPercent: -18,
-        autoAlpha: 0.2,
-        ease: "none",
-        scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: getScrub() },
-      });
 
       revealOnScroll(body);
 
@@ -102,55 +90,36 @@ export function PropertyDetail({ property, related }: PropertyDetailProps) {
 
   useViewCursor(relatedRef, cursorRef, !reducedMotion);
 
-  const lines = titleLines(property.title);
-
   return (
     <>
-      <section ref={heroRef} className="property-hero" aria-labelledby="page-title">
-        <figure className="property-hero-media" data-hero-frame>
-          <div className="page-hero-media-settle">
-            <div className="page-hero-media-drift" data-image-media>
-              <Image src={property.images[0]} alt={property.description} fill priority sizes="100vw" />
-            </div>
-          </div>
-        </figure>
-
-        <div className="property-hero-content">
-          <Link className="property-back page-hero-fade" href={propertiesHref("all")}>
+      <PageHero
+        eyebrow={
+          <Link className="property-back" href={propertiesHref("all")}>
             <ArrowLeft aria-hidden="true" size={15} strokeWidth={1.5} />
             All properties
           </Link>
-
-          <div className="property-hero-meta page-hero-fade">
+        }
+        counter={`Listing ${String(position + 1).padStart(2, "0")} / ${String(listings.length).padStart(2, "0")}`}
+        kicker={
+          <span className="property-hero-meta">
             <span className="listing-status" data-status={property.status}>
               {propertyStatusLabels[property.status]}
             </span>
-            <span>{property.location}</span>
-          </div>
-
-          <h1 id="page-title" className="property-hero-title">
-            {lines.map((line, index) => (
-              <span className="line-mask" key={line} style={{ "--line-index": index } as CSSProperties}>
-                <span>{line}</span>
-              </span>
-            ))}
-          </h1>
-
-          <div className="property-hero-footer page-hero-fade">
-            <span className="property-hero-price">{property.priceLabel}</span>
-            <Link className="intent-link" href="#contact" onClick={() => enquireAbout(property)}>
-              <span className="intent-link-swap">
-                <span>Arrange a visit</span>
-                <span aria-hidden="true">Arrange a visit</span>
-              </span>
-              <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} />
-            </Link>
-          </div>
-        </div>
-      </section>
+            {property.location}
+          </span>
+        }
+        titleLines={titleLines(property.title)}
+        intro={`${propertyFacts(property).slice(1).join(" · ")} · ${property.priceLabel}. Floor plans, pricing and private visits on request.`}
+        actions={[
+          { label: "Arrange a visit", href: "#contact", onClick: () => enquireAbout(property) },
+          { label: "Overview", href: "#overview", variant: "glass" },
+        ]}
+        dockLabel="Property details"
+        image={{ src: property.images[0], alt: property.description }}
+      />
 
       <div ref={bodyRef}>
-        <section className="property-overview" aria-labelledby="property-overview-title">
+        <section id="overview" className="property-overview" aria-labelledby="property-overview-title">
           <div className="section-rule" data-reveal>
             <span>01 / Overview</span>
             <i />

@@ -68,7 +68,7 @@ export function ServicesIndex() {
   const current = services[active];
 
   return (
-    <section ref={rootRef} className="services-index" aria-labelledby="services-index-title">
+    <section ref={rootRef} id="what-we-do" className="services-index" aria-labelledby="services-index-title">
       <header className="services-index-header">
         <div className="section-rule" data-reveal>
           <span>01 / What we do</span>
