@@ -5,25 +5,20 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 import { contactDetails } from "@/data/contact";
+import { primaryNavigation, propertiesHref } from "@/data/navigation";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { getScrub, gsap } from "@/lib/gsap";
 import { createIvoryHeaderZone, setHeaderTone } from "@/lib/header-tone";
 import { scrollToTarget } from "@/lib/smooth-scroll";
 
-const exploreLinks = [
-  { label: "What we do", href: "#properties" },
-  { label: "Why Vrindavan", href: "#vrindavan" },
-  { label: "About", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Contact", href: "#contact" },
-];
+const exploreLinks = [{ label: "Home", href: "/" }, ...primaryNavigation];
 
 const propertyLinks = [
-  { label: "Selected properties", href: "#selected-properties" },
-  { label: "Residential", href: "#properties" },
-  { label: "Commercial", href: "#properties" },
-  { label: "Plots & Land", href: "#properties" },
-  { label: "Find a property", href: "#property-finder" },
+  { label: "All properties", href: propertiesHref("all") },
+  { label: "Residential", href: propertiesHref("residential") },
+  { label: "Commercial", href: propertiesHref("commercial") },
+  { label: "Plots & Land", href: propertiesHref("land") },
+  { label: "Rental", href: propertiesHref("rental") },
 ];
 
 export function Footer() {

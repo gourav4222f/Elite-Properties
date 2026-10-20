@@ -36,3 +36,47 @@ export const principles: readonly Principle[] = [
       "Management and support for owners who want to stay connected to their property for the long term.",
   },
 ] as const;
+
+export const aboutStory: readonly string[] = [
+  "Buying, selling or renting in a city like Vrindavan rarely follows a template. Families arrive for the temples and stay for the pace of life; businesses follow the visitors; investors watch the corridor to Mathura grow. Each brings a different set of questions.",
+  "We keep our focus deliberately local, so the advice you get is grounded in the streets, the projects and the people behind them. That means fewer options, chosen with more care, and a clear view of the paperwork before anything is signed.",
+];
+
+export interface ServiceArea {
+  id: string;
+  number: string;
+  name: string;
+  description: string;
+  highlights: string;
+  image: {
+    src: string;
+    alt: string;
+  };
+}
+
+export const serviceAreas: readonly ServiceArea[] = [
+  {
+    id: "vrindavan",
+    number: "01",
+    name: "Vrindavan",
+    description:
+      "Homes, plots and rentals close to the temples and ghats, and newer gated communities along Chhatikara Road.",
+    highlights: "Residential · Plots · Rentals",
+    image: {
+      src: "/images/lifestyle/family-walking-residential-park.png",
+      alt: "Family walking together along a tree-lined residential path",
+    },
+  },
+  {
+    id: "mathura",
+    number: "02",
+    name: "Mathura",
+    description:
+      "City apartments and commercial frontage, connected by Mathura Junction, NH-19 and the Yamuna Expressway.",
+    highlights: "Apartments · Commercial · Investment",
+    image: {
+      src: "/images/infrastructure/city-highway-flyover-night-aerial.jpg",
+      alt: "Aerial view of highway interchanges glowing at night",
+    },
+  },
+] as const;

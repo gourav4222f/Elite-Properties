@@ -2,18 +2,18 @@
 
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { primaryNavigation as navigation } from "@/data/navigation";
 import { gsap, motionDurations, motionEasings } from "@/lib/gsap";
 
-const navigation = [
-  { label: "Properties", href: "#properties" },
-  { label: "Services", href: "#services" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
-];
+function isCurrent(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export function Header() {
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -94,13 +94,18 @@ export function Header() {
 
         <nav className="desktop-navigation" aria-label="Primary navigation">
           {navigation.map((item) => (
-            <Link key={item.label} className="header-link" href={item.href}>
+            <Link
+              key={item.label}
+              className="header-link"
+              href={item.href}
+              aria-current={isCurrent(pathname, item.href) ? "page" : undefined}
+            >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <Link className="header-enquire" href="#contact">
+        <Link className="header-enquire" href="/contact">
           <span>Enquire</span>
           <ArrowUpRight aria-hidden="true" size={15} strokeWidth={1.5} />
         </Link>
@@ -138,14 +143,19 @@ export function Header() {
           <nav className="mobile-navigation" aria-label="Mobile primary navigation">
             {navigation.map((item) => (
               <div key={item.label} className="mobile-menu-link-mask">
-                <Link className="mobile-menu-link" href={item.href} onClick={closeMenu}>
+                <Link
+                  className="mobile-menu-link"
+                  href={item.href}
+                  aria-current={isCurrent(pathname, item.href) ? "page" : undefined}
+                  onClick={closeMenu}
+                >
                   {item.label}
                 </Link>
               </div>
             ))}
           </nav>
 
-          <Link className="mobile-menu-enquire" href="#contact" onClick={closeMenu}>
+          <Link className="mobile-menu-enquire" href="/contact" onClick={closeMenu}>
             Enquire
             <ArrowUpRight aria-hidden="true" size={18} strokeWidth={1.5} />
           </Link>
