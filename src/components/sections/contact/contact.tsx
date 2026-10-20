@@ -28,15 +28,29 @@ function FieldError({ field, errors }: { field: EnquiryField; errors: EnquiryErr
   );
 }
 
-export function Contact() {
+interface ContactProps {
+  eyebrow?: string;
+  /** The contact page leads with this section, so its title becomes the page heading. */
+  titleAs?: "h1" | "h2";
+  /** Pre-fills the "Regarding" line, e.g. on a property's own page. */
+  initialProperty?: string;
+  initialInterest?: EnquiryInterest;
+}
+
+export function Contact({
+  eyebrow = "07 / Contact",
+  titleAs: Title = "h2",
+  initialProperty = "",
+  initialInterest = enquiryInterests[0],
+}: ContactProps) {
   const rootRef = useRef<HTMLElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const confirmationRef = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errors, setErrors] = useState<EnquiryErrors>({});
-  const [interest, setInterest] = useState<EnquiryInterest>(enquiryInterests[0]);
-  const [property, setProperty] = useState("");
+  const [interest, setInterest] = useState<EnquiryInterest>(initialInterest);
+  const [property, setProperty] = useState(initialProperty);
   const [sentName, setSentName] = useState("");
 
   useEffect(() => {
@@ -129,12 +143,12 @@ export function Contact() {
     <section ref={rootRef} id="contact" className="contact" aria-labelledby="contact-title">
       <div className="contact-heading">
         <div className="section-rule" data-reveal>
-          <span>07 / Contact</span>
+          <span>{eyebrow}</span>
           <i />
         </div>
-        <h2 id="contact-title" className="contact-title" data-reveal-lines>
+        <Title id="contact-title" className="contact-title" data-reveal-lines>
           <MaskedLines lines={["Let's find", "your place."]} />
-        </h2>
+        </Title>
         <p className="contact-intro" data-reveal>
           Tell us what you are looking for, whether it is a home, a plot or a place for your business, and we
           will take it from there.

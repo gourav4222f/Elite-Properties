@@ -40,20 +40,19 @@ The contact form validates in the browser and posts to `POST /api/enquiry` (`src
 - Dark bands register with `createIvoryHeaderZone` (`src/lib/header-tone.ts`) so the fixed header stays legible.
 - Every animated section has a `prefers-reduced-motion` path that leaves content static and fully visible.
 
-## Hero frame sequence
+## Hero film
 
-The hero renders `public/frames/frame_0001.webp` through `frame_0720.webp` in one canvas.
+The hero scrubs one video, `public/video/hero-1280.mp4` (phones and Save-Data connections get `hero-960.mp4`), in step with the scroll.
 
-- A Web Worker (`src/workers/frame-loader.worker.ts`) fetches and decodes frames with `createImageBitmap` and transfers them to the page, so the main thread only draws. Browsers without worker decoding fall back to decoding on the page.
-- The first 24 frames are loader-critical. Next, the worker builds a low-resolution keyframe for every 12th frame, a stand-in shown while a full frame is still loading, so the footage keeps pace with the scroll even on a first visit over a slow connection. The remaining frames are then fetched into the HTTP cache, coarse to fine, without decoding.
-- Near the playhead, frames ahead in the direction of travel are decoded first. The window reaches further the faster the scroll and thins out with distance.
-- Decoded frames are bounded (64 on desktop, 40 on phones, 24 on low-memory devices) and released when the main thread is idle.
-- The canvas is drawn at most once per frame, after the scroll update and the story timeline. Its backing store is capped near the 1280×720 source resolution.
+- The films are encoded for scrubbing: H.264 with a keyframe every 4 frames and no B-frames, so any seek decodes at most three frames. The `ffmpeg` command to re-encode them from `source/hero-scroll.mp4` is in `src/lib/hero-video.ts`.
+- `useScrollVideo` (`src/hooks/use-scroll-video.ts`) downloads the whole film before scrubbing, reporting progress to the loader, and holds it in memory as a blob, so a seek never waits on the network. The download is reused when visitors return to the page.
+- Only one seek runs at a time. When it lands, the next seek jumps straight to the current scroll position instead of working through every position in between, which is what keeps the picture from trailing the scroll.
+- If the download is slow, the loader gives way after 9 seconds on the poster frame and the film takes over as soon as it arrives.
 - The story timeline follows the scroll directly (no extra scrub smoothing) and is pre-initialised behind the loader.
 - The stage stays pinned while the first section slides over it, receding and dimming underneath.
-- `/frames/*` is served with a week-long `Cache-Control` (see `next.config.ts`); if the frames are re-exported, rename the folder or shorten that header.
+- `/video/*` is served with a week-long `Cache-Control` (see `next.config.ts`); if the film is re-encoded, rename the file or shorten that header.
 
-Desktop uses approximately `700vh` of scroll distance. Tablet and mobile use approximately `500vh`, measured in stable `svh` units so the toolbar collapsing on mobile never shifts scroll positions. Reduced-motion visitors receive a static representative frame and normal page flow.
+Desktop uses approximately `700vh` of scroll distance. Tablet and mobile use approximately `500vh`, measured in stable `svh` units so the toolbar collapsing on mobile never shifts scroll positions. Reduced-motion visitors receive a static representative frame (`hero-still.webp`), the film is never downloaded, and the page flows normally.
 
 ## Quality checks
 

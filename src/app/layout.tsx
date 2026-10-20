@@ -19,7 +19,10 @@ const bodyFont = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Elite Properties | Find Your Place in Vrindavan",
+  title: {
+    default: "Elite Properties | Find Your Place in Vrindavan",
+    template: "%s | Elite Properties",
+  },
   description:
     "Premium residential, commercial, land, rental, and property investment guidance in Vrindavan and Mathura.",
 };

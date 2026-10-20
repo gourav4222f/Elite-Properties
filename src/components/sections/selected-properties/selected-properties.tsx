@@ -1,100 +1,50 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { MaskedLines } from "@/components/motion/masked-lines";
-import {
-  listingFilters,
-  listings,
-  matchesFilter,
-  propertyStatusLabels,
-  propertyTypeLabels,
-  type ListingFilter,
-} from "@/data/listings";
+import { listingFilters, listings, matchesFilter, type ListingFilter } from "@/data/listings";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { useViewCursor } from "@/hooks/use-view-cursor";
-import { requestEnquiry } from "@/lib/enquiry";
 import { gsap, motionEasings, ScrollTrigger } from "@/lib/gsap";
 import { animateImage } from "@/lib/image-motion";
 import { revealOnScroll } from "@/lib/reveal";
-import type { Property } from "@/types/property";
 
-function enquireAbout(property: Property) {
-  requestEnquiry({
-    property: property.title,
-    interest: property.purpose === "rent" ? "Renting a property" : "Buying a property",
-  });
+import { ListingCard } from "./listing-card";
+
+const WIDE_SIZES = "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 56vw";
+const NARROW_SIZES = "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 34vw";
+
+interface SelectedPropertiesProps {
+  id?: string;
+  eyebrow?: string;
+  titleLines?: readonly string[];
+  intro?: string;
+  initialFilter?: ListingFilter;
+  /** Pass both to let a parent own the filter, e.g. so other sections can change it. */
+  filter?: ListingFilter;
+  onFilterChange?: (filter: ListingFilter) => void;
 }
 
-function ListingCard({ property, index }: { property: Property; index: number }) {
-  const wide = index % 4 === 0 || index % 4 === 3;
-  const facts = [
-    `${propertyTypeLabels[property.type]} · ${property.purpose === "rent" ? "For rent" : "For sale"}`,
-    property.bedrooms ? `${property.bedrooms} BHK` : null,
-    property.area,
-  ].filter(Boolean);
-
-  return (
-    <li className="listing-card" data-listing-card>
-      <Link
-        className="listing-media"
-        href="#contact"
-        tabIndex={-1}
-        aria-hidden="true"
-        data-cursor-view
-        onClick={() => enquireAbout(property)}
-      >
-        <span className="listing-media-frame" data-listing-frame>
-          <Image
-            src={property.images[0]}
-            alt=""
-            fill
-            sizes={wide ? "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 56vw" : "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 34vw"}
-          />
-        </span>
-        <span className="listing-status" data-status={property.status}>
-          {propertyStatusLabels[property.status]}
-        </span>
-      </Link>
-      <div className="listing-body">
-        <p className="listing-location">{property.location}</p>
-        <h3 className="listing-title">{property.title}</h3>
-        <p className="listing-description">{property.description}</p>
-        <ul className="listing-facts" aria-label="Key facts">
-          {facts.map((fact) => (
-            <li key={fact}>{fact}</li>
-          ))}
-        </ul>
-        <div className="listing-footer">
-          <span className="listing-price">{property.priceLabel}</span>
-          <Link
-            className="intent-link"
-            href="#contact"
-            aria-label={`Enquire about ${property.title}`}
-            onClick={() => enquireAbout(property)}
-          >
-            <span className="intent-link-swap">
-              <span>Enquire</span>
-              <span aria-hidden="true">Enquire</span>
-            </span>
-            <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} />
-          </Link>
-        </div>
-      </div>
-    </li>
-  );
-}
-
-export function SelectedProperties() {
+export function SelectedProperties({
+  id = "selected-properties",
+  eyebrow = "06 / Selected properties",
+  titleLines = ["Places worth", "your attention."],
+  intro = "A considered selection across Vrindavan and Mathura. Ask us about availability, pricing and private visits.",
+  initialFilter = "all",
+  filter: controlledFilter,
+  onFilterChange,
+}: SelectedPropertiesProps) {
   const rootRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLUListElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const firstPassRef = useRef(true);
   const reducedMotion = usePrefersReducedMotion();
-  const [filter, setFilter] = useState<ListingFilter>("all");
+  const [ownFilter, setOwnFilter] = useState<ListingFilter>(initialFilter);
+  const filter = controlledFilter ?? ownFilter;
+  const setFilter = onFilterChange ?? setOwnFilter;
   const visible = listings.filter((property) => matchesFilter(property, filter));
 
   useEffect(() => {
@@ -172,18 +122,17 @@ export function SelectedProperties() {
   };
 
   return (
-    <section ref={rootRef} id="selected-properties" className="listings" aria-labelledby="listings-title">
+    <section ref={rootRef} id={id} className="listings" aria-labelledby={`${id}-title`}>
       <header className="listings-header">
         <div className="section-rule" data-reveal>
-          <span>06 / Selected properties</span>
+          <span>{eyebrow}</span>
           <i />
         </div>
-        <h2 id="listings-title" className="listings-title" data-reveal-lines>
-          <MaskedLines lines={["Places worth", "your attention."]} offset={[1]} />
+        <h2 id={`${id}-title`} className="listings-title" data-reveal-lines>
+          <MaskedLines lines={titleLines} offset={[1]} />
         </h2>
         <p className="listings-intro" data-reveal>
-          A considered selection across Vrindavan and Mathura. Ask us about availability, pricing and
-          private visits.
+          {intro}
         </p>
         <div className="listings-toolbar" data-reveal>
           <div className="listings-filter" role="group" aria-label="Filter properties by category">
@@ -211,7 +160,11 @@ export function SelectedProperties() {
 
       <ul ref={gridRef} className="listings-grid">
         {visible.map((property, index) => (
-          <ListingCard key={property.id} property={property} index={index} />
+          <ListingCard
+            key={property.id}
+            property={property}
+            sizes={index % 4 === 0 || index % 4 === 3 ? WIDE_SIZES : NARROW_SIZES}
+          />
         ))}
       </ul>
 
@@ -227,7 +180,7 @@ export function SelectedProperties() {
       </div>
 
       <div ref={cursorRef} className="view-cursor" aria-hidden="true">
-        Enquire <ArrowUpRight size={12} strokeWidth={1.5} />
+        View <ArrowUpRight size={12} strokeWidth={1.5} />
       </div>
     </section>
   );
